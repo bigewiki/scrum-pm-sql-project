@@ -35,3 +35,15 @@ BEGIN
     RETURN (@result);
 END EOF
 delimiter ;
+
+-- get story's owner
+delimiter EOF
+CREATE function getOwner(passedStory INT)
+RETURNS VARCHAR(30)
+READS SQL DATA
+BEGIN
+    SELECT CONCAT(u.fname,' ',u.lname) INTO @result
+    FROM stories AS s JOIN users u ON (u.id=s.owner) WHERE s.id = passedStory;
+    RETURN(@result);
+END EOF
+delimiter ;
