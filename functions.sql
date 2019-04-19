@@ -47,3 +47,28 @@ BEGIN
     RETURN(@result);
 END EOF
 delimiter ;
+
+-- get current sprint
+delimiter EOF
+CREATE function currentSprint()
+RETURNS INT
+READS SQL DATA
+BEGIN
+  DECLARE result INT DEFAULT NULL;
+  SELECT id INTO result FROM sprints WHERE start_date < current_date AND end_date > current_date;
+  RETURN(result);
+END EOF
+delimiter ;
+
+-- get current next sprint
+delimiter EOF
+CREATE function nextSprint()
+RETURNS INT
+READS SQL DATA
+BEGIN
+  DECLARE result INT DEFAULT NULL;
+  SELECT id INTO result FROM sprints WHERE start_date < current_date AND end_date > current_date;
+  set result = result + 1;
+  RETURN(result);
+END EOF
+delimiter ;
