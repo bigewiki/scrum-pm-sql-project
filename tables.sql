@@ -12,6 +12,8 @@ CREATE TABLE `users` (
   `fname` VARCHAR(30) NULL DEFAULT NULL,
   `lname` VARCHAR(30) NULL DEFAULT NULL,
   `role_id` SMALLINT(3) NULL DEFAULT NULL,
+  `email` VARCHAR(99) NOT NULL,
+  `password_hash` VARCHAR (128) NOT NULL,
   PRIMARY KEY (`id`)
 ) engine=InnoDB Default charset utf8mb4 collate=utf8mb4_unicode_ci;
 
@@ -62,7 +64,7 @@ CREATE TABLE `stories` (
   `dependency` INTEGER NULL DEFAULT NULL,
   `time_size` TINYINT NULL DEFAULT NULL,
   `epic_id` INTEGER NULL DEFAULT NULL,
-  `status` VARCHAR(30) NULL DEFAULT NULL
+  `status` VARCHAR(30) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) engine=InnoDB Default charset utf8mb4 collate=utf8mb4_unicode_ci;
 
