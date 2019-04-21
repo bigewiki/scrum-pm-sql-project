@@ -115,6 +115,23 @@ CREATE TABLE `comments` (
 ) engine=InnoDB Default charset utf8mb4 collate=utf8mb4_unicode_ci;
 
 -- ---
+-- Table 'archived_comments'
+--
+-- ---
+
+DROP TABLE IF EXISTS `archived_comments`;
+
+CREATE TABLE `archived_comments` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `content` TEXT(10000) NULL DEFAULT NULL,
+  `owner` INTEGER NULL DEFAULT NULL,
+  `parent` INTEGER NULL DEFAULT NULL,
+  `story_id` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) engine=InnoDB Default charset utf8mb4 collate=utf8mb4_unicode_ci;
+
+
+-- ---
 -- Table 'sprints'
 --
 -- ---
@@ -145,5 +162,8 @@ ALTER TABLE `tasks` ADD FOREIGN KEY (story_id) REFERENCES `stories` (`id`);
 ALTER TABLE `comments` ADD FOREIGN KEY (owner) REFERENCES `users` (`id`);
 ALTER TABLE `comments` ADD FOREIGN KEY (parent) REFERENCES `comments` (`id`);
 ALTER TABLE `comments` ADD FOREIGN KEY (story_id) REFERENCES `stories` (`id`);
+ALTER TABLE `archived_comments` ADD FOREIGN KEY (owner) REFERENCES `users` (`id`);
+ALTER TABLE `archived_comments` ADD FOREIGN KEY (parent) REFERENCES `comments` (`id`);
+ALTER TABLE `archived_comments` ADD FOREIGN KEY (story_id) REFERENCES `stories` (`id`);
 
 set foreign_key_checks=1;

@@ -22,11 +22,11 @@ INSERT INTO `roles` (`role_name`,`role_description`) VALUES
 ('Queen','Is in charge of all the things');
 
 -- users
-INSERT INTO `users` (`fname`,`lname`,`role_id`) VALUES
-('Grey','Worm',2),
-('Jorah','Mormont',3),
-('Tyrion','Lannister',3),
-('Daenerys','Targaryen',4);
+INSERT INTO `users` (`fname`,`lname`,`role_id`,`email`,`password_hash`) VALUES
+('Grey','Worm',2,'Grey.Worm@Targaryen.net','FAF62C035165B0231FD74A9B7FE9B706BCC4B7AA27F7B5F77B1DFDA4BE7BE608F75A15D00AC3BD4CA06D31D1BB240C7E40CC295ADB8027B2CF72995E2147A5A5'),
+('Jorah','Mormont',3,'Jorah.Mormont@Targaryen.net','BD0229A5332088602ED873A036282B869ABD66570052A3C5AAA98E14588517FBAE87E3F7FBB57A421D8CE7D4A2FED1660B07849DB4A71D01F9B9E5636E34F92B'),
+('Tyrion','Lannister',3,'Tyrion.Lannister@Targaryen.net','E1B0174F0C8FB82F3744BE39DE853C7BF3F12742FC003C53B90FA71E898CC9946ECA2B4F869B9257AD1CFC9EBFCD07A232860BDDF1D0E7F79B598238CA90A7A0'),
+('Daenerys','Targaryen',4,'Daenerys.Targaryen@Targaryen.net','7B7C9B334AB419BEA0DB62F5C4BBF1DC27DB4261DC2EEE521B59DAA034E7AF16429B06479673698AAFE2EED371E012F625AFF87FABF53B43C61257A11F46E863');
 
 -- stories
 INSERT INTO `stories` (`name`,`description`,`owner`,`sprint_id`,`priority`,`dependency`,`time_size`,`epic_id`) VALUES
