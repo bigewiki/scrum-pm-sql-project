@@ -1,12 +1,3 @@
--- testing
--- do these work?
-delimiter EOF
-CREATE PROCEDURE test1()
-BEGIN
-  SELECT * FROM users;
-END EOF
-delimiter ;
-
 -- display all stories
 
 delimiter EOF
@@ -61,20 +52,18 @@ BEGIN
   DECLARE n INT DEFAULT 0;
   DECLARE i INT DEFAULT 0;
   DECLARE resultId INT DEFAULT NULL;
-  DECLARE resultStatus VARCHAR(20) DEFAULT NULL;
+  DECLARE resultPriority VARCHAR(20) DEFAULT NULL;
   SET i = 0;
   SELECT COUNT(*) INTO n FROM stories WHERE sprint_id = lastSprint() AND status NOT LIKE 'complete' OR sprint_id = lastSprint() AND status IS NULL;
   WHILE i < n DO
-    SELECT id,status INTO resultId,resultStatus FROM stories WHERE sprint_id = lastSprint() AND status NOT LIKE 'complete' OR sprint_id = lastSprint() AND status IS NULL LIMIT 1;
-    -- IF resultStatus like 'low'
-    --   UPDATE stories SET sprint_id = currentSprint(), status = 'medium' WHERE id = resultId;
-    -- ELSEIF resultStatus like 'medium'
-    --   UPDATE stories SET sprint_id = currentSprint(), status = 'high' WHERE id = resultId;
-    -- ELSE
-    --   select * from stories;
-    -- END IF;
-    -- -- -- just testing here -- -- --
-    select resultId,resultStatus;
+    SELECT id,priority INTO resultId,resultPriority FROM stories WHERE sprint_id = lastSprint() AND status NOT LIKE 'complete' OR sprint_id = lastSprint() AND status IS NULL LIMIT 1;
+    IF resultPriority like 'low' THEN
+      UPDATE stories SET sprint_id = currentSprint(), priority = 'medium' WHERE id = resultId;
+    ELSEIF resultPriority like 'medium' THEN
+      UPDATE stories SET sprint_id = currentSprint(), priority = 'high' WHERE id = resultId;
+    ELSE
+      UPDATE stories SET sprint_id = currentSprint(), priority = 'low' WHERE id = resultId;
+    END IF;
     SET i = i + 1;
   END WHILE;
 END EOF

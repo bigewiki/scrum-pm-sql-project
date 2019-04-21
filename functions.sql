@@ -1,17 +1,4 @@
--- test
--- humble beignings right here...
-delimiter EOF
-CREATE function test1()
-RETURNS INT
-READS SQL DATA
-BEGIN
-    set @result = 1;
-    RETURN (select @result);
-END EOF
-delimiter ;
-
--- test2
--- pass in the id for a user
+-- select name of user
 delimiter EOF
 CREATE function test2(passedUser INT)
 RETURNS CHAR(30)
@@ -69,6 +56,19 @@ BEGIN
   DECLARE result INT DEFAULT NULL;
   SELECT id INTO result FROM sprints WHERE start_date < current_date AND end_date > current_date;
   set result = result + 1;
+  RETURN(result);
+END EOF
+delimiter ;
+
+--get last sprint
+delimiter EOF
+CREATE function lastSprint()
+RETURNS INT
+READS SQL DATA
+BEGIN
+  DECLARE result INT DEFAULT NULL;
+  SELECT id INTO result FROM sprints WHERE start_date < current_date AND end_date > current_date;
+  set result = result - 1;
   RETURN(result);
 END EOF
 delimiter ;
