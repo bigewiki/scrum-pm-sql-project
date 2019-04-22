@@ -37,5 +37,11 @@ SELECT * FROM sprints WHERE start_date < current_date AND end_date > current_dat
 -- select incomplete stories from last sprint
 SELECT * FROM stories WHERE sprint_id = lastSprint();
 
--- needed to add this column, fixing in tables.sql though
--- ALTER TABLE stories ADD COLUMN status VARCHAR(30);
+-- select comments for a story and display their user
+SELECT c.id,c.content,c.owner,s.name
+FROM comments c JOIN stories s ON (c.story_id=s.id);
+
+-- delete comments for completed stories
+-- get help with this query...
+DELETE c FROM comments c JOIN stories s ON (c.story_id=s.id)
+WHERE s.status like 'complete' ORDER BY c.id DESC;
