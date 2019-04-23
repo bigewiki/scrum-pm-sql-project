@@ -40,8 +40,3 @@ SELECT * FROM stories WHERE sprint_id = lastSprint();
 -- select comments for a story and display their user
 SELECT c.id,c.content,c.owner,s.name
 FROM comments c JOIN stories s ON (c.story_id=s.id);
-
--- delete comments for completed stories
--- get help with this query...
-DELETE c FROM comments c JOIN stories s ON (c.story_id=s.id)
-WHERE s.status like 'complete' ORDER BY c.id DESC;
