@@ -99,3 +99,23 @@ BEGIN
   CLOSE commentCursor;
 END EOF
 delimiter ;
+
+
+
+-- create the futureSprint() if it doesn't exist
+-- neets work
+-- drop procedure createFutureSprint;
+-- call createFutureSprint();
+delimiter EOF
+CREATE PROCEDURE createFutureSprint()
+BEGIN
+  DECLARE futureSprint INT;
+  SELECT id INTO futureSprint FROM sprints WHERE id = futureSprint();
+  IF futureSprint = futureSprint() THEN
+    signal SQLSTATE '45000' set MESSAGE_TEXT = "The future sprint already exists";
+  ELSE
+    INSERT INTO `sprints` (`id`,`quarter`,`number`,`start_date`,`end_date`) VALUES
+    (4,2,4,'2019-05-13','2019-05-26');
+  END IF;
+END EOF
+delimiter ;
