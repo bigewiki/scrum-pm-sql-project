@@ -85,3 +85,25 @@ BEGIN
   RETURN(result);
 END EOF
 delimiter ;
+
+-- output which quarter it is
+-- drop function whatQuarter;
+-- select whatQuarter(current_date);
+delimiter EOF
+CREATE function whatQuarter(dateParam DATE)
+RETURNS TINYINT(1)
+READS SQL DATA
+BEGIN
+  DECLARE result TINYINT(1);
+  IF MONTH(dateParam) < 4 THEN
+    SET result = 1;
+  ELSEIF MONTH(dateParam) > 3 AND MONTH(dateParam) < 7 THEN
+    SET result = 2;
+  ELSEIF MONTH(dateParam) > 6 AND MONTH(dateParam) < 10 THEN
+    SET result = 3;
+  ELSE
+    SET result = 4;
+  END IF;
+  RETURN(result);
+END EOF
+delimiter ;

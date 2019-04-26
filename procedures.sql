@@ -103,19 +103,34 @@ delimiter ;
 
 
 -- create the futureSprint() if it doesn't exist
--- neets work
 -- drop procedure createFutureSprint;
 -- call createFutureSprint();
+-- DELETE FROM sprints WHERE id = futureSprint();
+-- SELECT * FROM sprints WHERE id = futureSprint();
 delimiter EOF
 CREATE PROCEDURE createFutureSprint()
 BEGIN
   DECLARE futureSprint INT;
+  DECLARE startDate DATE;
+  DECLARE endDate Date;
+  DECLARE sprintNum INT;
   SELECT id INTO futureSprint FROM sprints WHERE id = futureSprint();
   IF futureSprint = futureSprint() THEN
     signal SQLSTATE '45000' set MESSAGE_TEXT = "The future sprint already exists";
   ELSE
+    SELECT end_date INTO startDate FROM sprints WHERE id = nextSprint();
+    SELECT DATE_ADD(startDate, INTERVAL 1 DAY) INTO startDate;
+    SELECT DATE_ADD(startDate, INTERVAL 13 DAY) INTO endDate;
+    SELECT `number` INTO sprintNum FROM sprints
+    WHERE `quarter` = whatQuarter(startDate) AND YEAR(start_date) = YEAR(startDate)
+    ORDER BY `number` DESC LIMIT 1;
+    IF sprintNum IS NOT NULL THEN
+      SET sprintNum = sprintNum + 1;
+    ELSE
+      SET sprintNum = 1;
+    END IF;
     INSERT INTO `sprints` (`id`,`quarter`,`number`,`start_date`,`end_date`) VALUES
-    (4,2,4,'2019-05-13','2019-05-26');
+    (nextSprint()+1,whatQuarter(startDate),sprintNum,startDate,endDate);
   END IF;
 END EOF
 delimiter ;
