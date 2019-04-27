@@ -96,13 +96,14 @@ WHERE u.id = 2;
 -- if we had hindsigh we wouldn't updated the owners of that task:
 UPDATE tasks set owner = 3 WHERE owner = 2;
 
--- lets find out what stories Jora owns since we just canned him...
+-- lets find out what stories Jorah owns since we just canned him...
 -- we'll use a subquery to get those
 SELECT * FROM stories WHERE owner IN (
   SELECT id FROM users WHERE id = 2
 )\G
 
 -- if we didn't know Jorah's id:
+-- the other subquery
 SELECT * FROM stories WHERE owner IN (
   SELECT id FROM users WHERE fname = 'Jorah'
 )\G
