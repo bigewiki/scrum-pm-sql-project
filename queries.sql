@@ -29,14 +29,29 @@ LEFT JOIN users u ON (t.owner=u.id) ORDER BY s.name;
 -- relates to 2b in ./explain.txt
 ALTER TABLE stories ADD UNIQUE (name);
 
--- diplay a sprint's story
+-- diplay a sprint's stories
 SELECT sp.id AS 'sprint', sp.quarter, st.name
 FROM stories st JOIN sprints sp ON (st.sprint_id=sp.id);
 
--- update sprint's story
-UPDATE stories SET sprint_id = 2 WHERE id = 1;
+-- update story's sprint to the current sprint
+-- requires the currentSprint function
+UPDATE stories SET sprint_id = currentSprint() WHERE id = 1;
+
+-- updating a couple stories to next sprint
+-- requires the nextSprint function
+UPDATE stories SET sprint_id = nextSprint() WHERE id = 2;
+UPDATE stories SET sprint_id = nextSprint() WHERE id = 4;
+
+-- select those stories from nextSprint
+-- requires the nextSprint function
+select * from stories WHERE sprint_id = nextSprint()\G
+
+-- getting the sum of the time_size for the stories in the nextSprint
+-- requires the nextSprint function
+SELECT SUM(time_size) AS 'Total Sprint Size' FROM stories WHERE sprint_id = nextSprint();
 
 -- select current sprint
+-- function was created to do this called currentSprint
 SELECT * FROM sprints WHERE start_date < current_date AND end_date > current_date;
 
 -- select incomplete stories from last sprint
@@ -91,3 +106,5 @@ SELECT * FROM stories WHERE owner IN (
 -- NOTE this has been added to the appropriate column in ./tables.sql
 ALTER TABLE tasks
 ADD COLUMN `status` VARCHAR(30) NULL DEFAULT NULL;
+
+--
