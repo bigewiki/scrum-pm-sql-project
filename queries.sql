@@ -68,3 +68,18 @@ WHERE CONCAT(u.fname,' ',u.lname) = 'Tyrion Lannister';
 SELECT s.name AS 'story name', CONCAT(u.fname,' ',u.lname) AS 'name'
 FROM stories AS s JOIN users AS u ON (u.id = s.owner)
 WHERE u.fname like 'Tyrion' AND u.lname like 'Lannister';
+
+-- delete a task
+-- we just fired Jora so lets delete his tasks
+-- we should've reassigned them but...
+-- -- first lets find his tasks;
+SELECT * FROM tasks AS t JOIN users u ON (t.owner = u.id) WHERE u.id = 2\G
+-- -- now lets delete them, but syntax needs to be changed up a bit
+DELETE t FROM tasks AS t JOIN users u ON (t.owner = u.id)
+WHERE u.id = 2;
+
+-- lets find out what stories Jora owns since we just canned him...
+-- we'll use a subquery to get those
+SELECT * FROM stories WHERE owner IN (
+  SELECT id FROM users WHERE id = 2
+)\G
