@@ -1,14 +1,11 @@
--- select name of user
-delimiter EOF
-CREATE function test2(passedUser INT)
-RETURNS CHAR(30)
-READS SQL DATA
-BEGIN
-    SELECT CONCAT(fname,' ',lname) INTO @result FROM users WHERE id = passedUser;
-    RETURN (@result);
-END EOF
-delimiter ;
-
+-- drop functions if they exist:
+DROP function IF EXISTS getRole;
+DROP function IF EXISTS getOwner;
+DROP function IF EXISTS currentSprint;
+DROP function IF EXISTS nextSprint;
+DROP function IF EXISTS lastSprint;
+DROP function IF EXISTS futureSprint;
+DROP function IF EXISTS whatQuarter;
 
 -- display role of passed user
 delimiter EOF

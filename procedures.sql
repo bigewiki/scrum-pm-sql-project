@@ -1,5 +1,14 @@
--- display all stories
+-- drop the procedures if they exist
+DROP procedure IF EXISTS allStories;
+DROP procedure IF EXISTS storyToSprint;
+DROP procedure IF EXISTS storyToCurrentSprint;
+DROP procedure IF EXISTS storyToNextSprint;
+DROP procedure IF EXISTS moveOverdueStories;
+DROP procedure IF EXISTS upgradeOverdueStories;
+DROP procedure IF EXISTS displayStoryComments;
+DROP procedure IF EXISTS createFutureSprint;
 
+-- display all stories
 delimiter EOF
 CREATE PROCEDURE allStories()
 BEGIN
