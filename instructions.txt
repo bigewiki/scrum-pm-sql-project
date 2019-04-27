@@ -9,7 +9,7 @@ create database scrumpm1;
   tables.sql // creates the tables
   inserts.sql // inserts the fake data
   functions.sql // drops the functions IF EXISTS then adds functions
-  procedures.sql // drops the procedures IF EXISTS then adds functions
+  procedures.sql // drops the procedures IF EXISTS then adds procedures
   triggers.sql // adds the triggers
   events.sql // adds the events
   views.sql // adds the temptable views
@@ -57,7 +57,7 @@ II. Meeting the criteria
   * I have a procedure using COUNT
   * If it counts I'm using ORDER BY in a procedure and once in queries.sql
   * I am using SUM once in queries.sql
-  * I'm using IF EXISTS on drops in users.sql, procedures.sql, and functionsql.sql
+  * I'm using IF EXISTS on drops in users.sql, procedures.sql, and function.sql
 
   f. Subquery
   * I included two subqueries in queries.sql that produce results similar to joins
