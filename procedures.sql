@@ -7,6 +7,7 @@ DROP procedure IF EXISTS moveOverdueStories;
 DROP procedure IF EXISTS upgradeOverdueStories;
 DROP procedure IF EXISTS displayStoryComments;
 DROP procedure IF EXISTS createFutureSprint;
+DROP procedure IF EXISTS displayStoryTasks;
 
 -- display all stories
 delimiter EOF
@@ -87,6 +88,18 @@ BEGIN
   JOIN users u ON (c.owner=u.id)
   WHERE s.id = storyId
   GROUP BY c.story_id,c.parent;
+END EOF
+delimiter ;
+
+
+-- display a passed story's task and owner
+delimiter EOF
+CREATE PROCEDURE displayStoryTasks(storyId INT)
+BEGIN
+  SELECT t.name AS `task name`, s.name as `story name`, CONCAT(u.fname,' ',u.lname) AS owner
+  FROM tasks AS t JOIN stories s ON (t.story_id=s.id)
+  LEFT JOIN users u ON (t.owner=u.id)
+  WHERE s.id = storyId;
 END EOF
 delimiter ;
 
