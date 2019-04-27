@@ -1,0 +1,107 @@
+=============================================
+I. Building the database
+=============================================
+1. Create the database inside of mysql prompt:
+create database scrumpm1;
+
+2. Build the import file (command included below):
+* Includes the following files
+  tables.sql // creates the tables
+  inserts.sql // inserts the fake data
+  functions.sql // drops the functions IF EXISTS then adds functions
+  procedures.sql // drops the procedures IF EXISTS then adds functions
+  triggers.sql // adds the triggers
+  events.sql // adds the events
+  views.sql // adds the temptable views
+
+* Use this in linux cli:
+cat tables.sql > import.sql && cat inserts.sql >> import.sql && cat functions.sql >> import.sql && cat functions.sql >> import.sql && cat procedures.sql >> import.sql && cat triggers.sql >> import.sql && cat events.sql >> import.sql && cat views.sql >> import.sql
+
+* import via linux cli:
+mysql -p -u root scrumpm1 < import.sql
+
+=============================================
+II. Meeting the criteria
+    * This is built from the posted criteria
+    * I will list each piece of criteria
+    * I will explain how item in the criteria is met
+=============================================
+1. 7-12 Tables (nearly all InnoDB, SphinxSE or MyISAM for one if you need fulltext search)
+  * please reference tables.sql which includes 8 tables
+
+2. Detailed ERD (using something like wwwsqldesigner)
+  * easily reference the scrumpm1.png image
+  * import the erd-sqldesigner.xml into https://ondras.zarovi.cz/sql/demo/
+
+3. Queries:
+  a. pull useful information not just throw away queries
+  * Please reference queries.sql
+  * I feel that I have included a healthy amount of queries that I used and needed
+
+  b. selects: explain what the purpose of these are (ie explain what question they answer)
+  * each query has a brief purpose commented above it
+
+  c. inserts, updates
+  * most inserts are included in insert.sql
+  * test inserts commented out in triggers
+  * several updates included in queries.sql
+  ** One to update a story's sprint
+  ** One to update the owner of a task
+  ** A couple updates to push some stories to the next sprint
+
+  d. deletes
+  * please excuse that I only included a single delete in the queries.sql file for demonstration
+  * I don't really like deleting data and tearing out records is difficult due to FKs
+
+  e. Aggregate Queries (usering group by, sum, exists etc)
+  * I have a procedure using COUNT
+  * If it counts I'm using ORDER BY in a procedure and once in queries.sql
+  * I am using SUM once in queries.sql
+  * I'm using IF EXISTS on drops in users.sql, procedures.sql, and functionsql.sql
+
+  f. Subquery
+  * I included two subqueries in queries.sql that produce results similar to joins
+  ** one query is selecting what stories Jorah owns by id
+  ** the other query is if we didn't know Jorah's id
+
+  g. Run EXPLAIN on your queries, provied the results in a file, and explain how your index scheme was modified to help the results
+  * Please reference the explain.txt file
+  * see also that I added a unique key to stories.name in queries.sql
+
+4. Triggers
+  * created a couple triggers, reference triggers.sql
+  ** one trigger will update the status if a task is created without an owner
+  *** will update BEFORE INSERT on tasks
+  *** will update the status = 'not started' if its null
+  ** second trigger will update the status based on conditions
+  *** if both status and owner are null set status = unassigned
+  *** if only the status is null set status = not started
+
+5. Procedures and Functions
+  * reference procedures.sql
+  * reference functions.sql
+  * Note: there are several dependencies on my defined functions in procedures
+
+7. Events
+  * reference events.sql
+  * includes only one event
+  ** you mentioned we only had to make one event
+  ** note the event will run one of my procedures
+
+8. Should create 3 users total:
+  a. a read only user
+    * reference 'guest'@'localhost' in users-grants.sql
+  b. a general user for transactions
+    * reference 'greyworm'@'localhost' in users-grants.sql
+  c. an admin user
+    * reference 'daenerystargaryen'@'localhost' in users-grants.sql
+
+9. Reports via procedures
+  * created 2 procedures to display reports:
+  ** displayStoryComments in procedures.sql
+  ** displayStoryTasks in procedures.sql
+
+10. Views
+  * created 2 views in views.sql
+  ** one is called story_status which joins stories and users
+  ** second is called user_roles which joins users and roles
