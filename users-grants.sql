@@ -1,6 +1,14 @@
+-- drop the users if they already exist
+-- select user from mysql.user;
+DROP USER IF EXISTS 'daenerystargaryen'@'localhost';
+DROP USER IF EXISTS 'greyworm'@'localhost';
+DROP USER IF EXISTS 'tyrionlannister'@'localhost';
+
+
 -- creating a super admin user for Daenerys Targaryen with all grants
 create user 'daenerystargaryen'@'localhost' Identified WITH SHA256_PASSWORD by '14MTheUnburnt!';
 GRANT ALL ON *.* TO 'daenerystargaryen'@'localhost';
+
 
 -- creating a user for Grey Worm
 -- this is a more restricted user
