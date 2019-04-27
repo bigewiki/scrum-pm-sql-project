@@ -102,6 +102,11 @@ SELECT * FROM stories WHERE owner IN (
   SELECT id FROM users WHERE id = 2
 )\G
 
+-- if we didn't know Jorah's id:
+SELECT * FROM stories WHERE owner IN (
+  SELECT id FROM users WHERE fname = 'Jorah'
+)\G
+
 -- we want to add a status column to the tasks table
 -- NOTE this has been added to the appropriate column in ./tables.sql
 ALTER TABLE tasks
