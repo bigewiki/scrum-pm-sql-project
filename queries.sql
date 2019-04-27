@@ -61,6 +61,19 @@ SELECT * FROM stories WHERE sprint_id = lastSprint();
 SELECT c.id,c.content,c.owner,s.name
 FROM comments c JOIN stories s ON (c.story_id=s.id);
 
+-- group a story's comments
+-- does require sql_mode=only_full_group_by
+SELECT c.id,c.content,c.owner,s.name
+FROM comments c JOIN stories s ON (c.story_id=s.id)
+GROUP BY c.story_id,c.parent;
+
+-- group a story's comments and display the users
+SELECT c.content,CONCAT(u.fname,' ',u.lname) AS 'user'
+FROM comments c JOIN stories s ON (c.story_id=s.id)
+JOIN users u ON (c.owner=u.id)
+WHERE s.id = 2
+GROUP BY c.story_id,c.parent;
+
 -- select comments for a story and nest their children...
 -- 'an insane set of self joins'
 SELECT CONCAT(c1.owner,': ',c1.content), CONCAT(c2.owner,': ',c2.content), CONCAT(c3.owner,': ',c3.content), CONCAT(c4.owner,': ',c4.content), CONCAT(c5.owner,': ',c5.content), CONCAT(c6.owner,': ',c6.content)

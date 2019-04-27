@@ -82,30 +82,11 @@ delimiter ;
 delimiter EOF
 CREATE PROCEDURE displayStoryComments(storyId INT)
 BEGIN
-  -- declaring variable(s)
-  DECLARE iComment INT;
-  DECLARE endLoop INTEGER DEFAULT 0;
-  -- creating cursor for story's top level comments
-  DECLARE commentCursor CURSOR FOR
-  SELECT id FROM comments WHERE parent IS NULL AND story_id = storyId;
-  -- declaring the NOT FOUND handler to toggle endLoop
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET endLoop = 1;
-  -- initiate the cursor
-  OPEN commentCursor;
-  -- create the loop
-  getComments: LOOP
-  -- fetch the current interation's results into the iComment var
-  FETCH commentCursor INTO iComment;
-  -- check if we should terminate the loop
-  IF endLoop = 1 THEN
-    LEAVE getComments;
-  END IF;
-  -- select child comments
-  SELECT * FROM comments WHERE parent = iComment;
-  -- end the loop
-  END LOOP getComments;
-  -- close the cursor
-  CLOSE commentCursor;
+  SELECT c.content,CONCAT(u.fname,' ',u.lname) AS 'user'
+  FROM comments c JOIN stories s ON (c.story_id=s.id)
+  JOIN users u ON (c.owner=u.id)
+  WHERE s.id = storyId
+  GROUP BY c.story_id,c.parent;
 END EOF
 delimiter ;
 
