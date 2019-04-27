@@ -12,7 +12,6 @@ delimiter ;
 INSERT INTO `tasks` (`name`,`owner`,`story_id`) VALUES
 ('train specialists',1,2);
 select * from tasks where name like 'train specialists';
--- IT WORKS!
 
 
 -- when we create a story with no owner and no status update status to 'unassigned'
@@ -36,4 +35,3 @@ select * from stories where name like 'gain favor of people'\G
 INSERT INTO `stories` (`name`,`owner`) VALUES
 ('secure trading partners',3);
 select * from stories where name like 'secure trading partners'\G
--- hooray they both work
