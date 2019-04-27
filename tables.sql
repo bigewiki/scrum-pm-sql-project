@@ -81,6 +81,7 @@ CREATE TABLE `tasks` (
   `description` TEXT(65535) NULL DEFAULT NULL,
   `owner` INTEGER NULL DEFAULT NULL,
   `story_id` INTEGER NULL DEFAULT NULL,
+  `status` VARCHAR(30) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) engine=InnoDB Default charset utf8mb4 collate=utf8mb4_unicode_ci;
 

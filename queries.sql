@@ -83,3 +83,8 @@ WHERE u.id = 2;
 SELECT * FROM stories WHERE owner IN (
   SELECT id FROM users WHERE id = 2
 )\G
+
+-- we want to add a status column to the tasks table
+-- NOTE this has been added to the appropriate column in ./tables.sql
+ALTER TABLE tasks
+ADD COLUMN `status` VARCHAR(30) NULL DEFAULT NULL;
