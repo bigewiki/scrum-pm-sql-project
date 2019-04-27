@@ -1,0 +1,296 @@
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+1. An insane set of self joins
+* This query looks expensive at a glance but actually spends more human effort in writing it
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+mysql> EXPLAIN SELECT CONCAT(c1.owner,': ',c1.content), CONCAT(c2.owner,': ',c2.content), CONCAT(c3.owner,': ',c3.content), CONCAT(c4.owner,': ',c4.content), CONCAT(c5.owner,': ',c5.content), CONCAT(c6.owner,': ',c6.content)
+    -> FROM comments AS c1
+    -> LEFT JOIN comments AS c2 ON (c1.id=c2.parent)
+    -> LEFT JOIN comments AS c3 ON (c2.id=c3.parent)
+    -> LEFT JOIN comments AS c4 ON (c3.id=c4.parent)
+    -> LEFT JOIN comments AS c5 ON (c4.id=c5.parent)
+    -> LEFT JOIN comments AS c6 ON (c5.id=c6.parent)
+    -> WHERE c1.story_id = 2\G
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: c1
+   partitions: NULL
+         type: ALL
+possible_keys: story_id
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 15
+     filtered: 40.00
+        Extra: Using where
+*************************** 2. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: c2
+   partitions: NULL
+         type: ref
+possible_keys: parent
+          key: parent
+      key_len: 5
+          ref: scrumpm1.c1.id
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+*************************** 3. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: c3
+   partitions: NULL
+         type: ref
+possible_keys: parent
+          key: parent
+      key_len: 5
+          ref: scrumpm1.c2.id
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+*************************** 4. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: c4
+   partitions: NULL
+         type: ref
+possible_keys: parent
+          key: parent
+      key_len: 5
+          ref: scrumpm1.c3.id
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+*************************** 5. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: c5
+   partitions: NULL
+         type: ref
+possible_keys: parent
+          key: parent
+      key_len: 5
+          ref: scrumpm1.c4.id
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+*************************** 6. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: c6
+   partitions: NULL
+         type: ref
+possible_keys: parent
+          key: parent
+      key_len: 5
+          ref: scrumpm1.c5.id
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+6 rows in set, 1 warning (0.00 sec)
+
+
+
+
+
+
+
+
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+2a. JOIN between 3 tables with ORDER BY
+* This query pulls all the tasks, their stories, and task's owner
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+mysql> EXPLAIN SELECT t.name AS `task name`, s.name as `story name`, CONCAT(u.fname,' ',u.lname) AS owner
+    -> FROM tasks AS t JOIN stories s ON (t.story_id=s.id)
+    -> LEFT JOIN users u ON (t.owner=u.id) ORDER BY s.name\G
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: s
+   partitions: NULL
+         type: ALL
+possible_keys: PRIMARY
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 4
+     filtered: 100.00
+        Extra: Using filesort
+*************************** 2. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t
+   partitions: NULL
+         type: ref
+possible_keys: story_id
+          key: story_id
+      key_len: 5
+          ref: scrumpm1.s.id
+         rows: 2
+     filtered: 100.00
+        Extra: NULL
+*************************** 3. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: u
+   partitions: NULL
+         type: eq_ref
+possible_keys: PRIMARY
+          key: PRIMARY
+      key_len: 4
+          ref: scrumpm1.t.owner
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+3 rows in set, 1 warning (0.00 sec)
+
+
+
+
+
+
+
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+2b. adding a key to help 2a
+* Added a unique key to stories.name to optimize 2a, noted differences:
+  - This looks way better now that we've added the unique key to the story's name!
+  - previously, the type was ALL now type is index!
+  - previously we we're 'Using filesort' now we're 'Using index'
+    -- turns out filesort has nothing to do with files:
+       https://www.percona.com/blog/2009/03/05/what-does-using-filesort-mean-in-mysql/
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+mysql> ALTER TABLE stories ADD UNIQUE (name);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain SELECT t.name AS `task name`, s.name as `story name`, CONCAT(u.fname,' ',u.lname) AS owner
+    -> FROM tasks AS t JOIN stories s ON (t.story_id=s.id)
+    -> LEFT JOIN users u ON (t.owner=u.id) ORDER BY s.name\G
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: s
+   partitions: NULL
+         type: index
+possible_keys: PRIMARY
+          key: name
+      key_len: 123
+          ref: NULL
+         rows: 4
+     filtered: 100.00
+        Extra: Using index
+*************************** 2. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t
+   partitions: NULL
+         type: ref
+possible_keys: story_id
+          key: story_id
+      key_len: 5
+          ref: scrumpm1.s.id
+         rows: 2
+     filtered: 100.00
+        Extra: NULL
+*************************** 3. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: u
+   partitions: NULL
+         type: eq_ref
+possible_keys: PRIMARY
+          key: PRIMARY
+      key_len: 4
+          ref: scrumpm1.t.owner
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+3 rows in set, 1 warning (0.00 sec)
+
+
+
+
+
+
+
+
+
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+3a. Bad way to query a story by user
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+mysql> explain SELECT s.name AS 'story name', CONCAT(u.fname,' ',u.lname) AS 'name'
+FROM stories AS s JOIN users AS u ON (u.id = s.owner)
+WHERE CONCAT(u.fname,' ',u.lname) = 'Tyrion Lannister'\G
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: s
+   partitions: NULL
+         type: ALL
+possible_keys: owner
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 4
+     filtered: 100.00
+        Extra: Using where
+*************************** 2. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: u
+   partitions: NULL
+         type: eq_ref
+possible_keys: PRIMARY
+          key: PRIMARY
+      key_len: 4
+          ref: scrumpm1.s.owner
+         rows: 1
+     filtered: 100.00
+        Extra: Using where
+2 rows in set, 1 warning (0.00 sec)
+
+
+
+
+
+
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+3b. Smarter way to query a story by user
+* Some diferrences:
+    - instead of owner being the possible_key now PRIMARY is defined
+      in the first iteration(?) of the explain
+    - now filtered is 25% instead of 100%, which is apparently an improvement
+      according the to mysql docs:
+      https://dev.mysql.com/doc/refman/8.0/en/explain-output.html#explain_filtered
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+mysql> explain SELECT s.name AS 'story name', CONCAT(u.fname,' ',u.lname) AS 'name'
+    -> FROM stories AS s JOIN users AS u ON (u.id = s.owner)
+    -> WHERE u.fname like 'Tyrion' AND u.lname like 'Lannister'\G
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: u
+   partitions: NULL
+         type: ALL
+possible_keys: PRIMARY
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 4
+     filtered: 25.00
+        Extra: Using where
+*************************** 2. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: s
+   partitions: NULL
+         type: ref
+possible_keys: owner
+          key: owner
+      key_len: 5
+          ref: scrumpm1.u.id
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+2 rows in set, 1 warning (0.00 sec)

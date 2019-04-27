@@ -19,10 +19,15 @@ JOIN roles r ON (u.role_id=r.id)\G
 SELECT i.name, i.description, s.name AS story
 FROM issues AS i LEFT JOIN stories s ON (i.story_id=s.id)\G
 
--- display task, story, and owner
+-- display task, story, and owner sorted by story
+-- relates to 2a and 2b in ./explain.txt
 SELECT t.name AS `task name`, s.name as `story name`, CONCAT(u.fname,' ',u.lname) AS owner
 FROM tasks AS t JOIN stories s ON (t.story_id=s.id)
 LEFT JOIN users u ON (t.owner=u.id) ORDER BY s.name;
+
+-- adding unique key to the story names
+-- relates to 2b in ./explain.txt
+ALTER TABLE stories ADD UNIQUE (name);
 
 -- diplay a sprint's story
 SELECT sp.id AS 'sprint', sp.quarter, st.name
@@ -40,3 +45,26 @@ SELECT * FROM stories WHERE sprint_id = lastSprint();
 -- select comments for a story and display their user
 SELECT c.id,c.content,c.owner,s.name
 FROM comments c JOIN stories s ON (c.story_id=s.id);
+
+-- select comments for a story and nest their children...
+-- 'an insane set of self joins'
+SELECT CONCAT(c1.owner,': ',c1.content), CONCAT(c2.owner,': ',c2.content), CONCAT(c3.owner,': ',c3.content), CONCAT(c4.owner,': ',c4.content), CONCAT(c5.owner,': ',c5.content), CONCAT(c6.owner,': ',c6.content)
+FROM comments AS c1
+LEFT JOIN comments AS c2 ON (c1.id=c2.parent)
+LEFT JOIN comments AS c3 ON (c2.id=c3.parent)
+LEFT JOIN comments AS c4 ON (c3.id=c4.parent)
+LEFT JOIN comments AS c5 ON (c4.id=c5.parent)
+LEFT JOIN comments AS c6 ON (c5.id=c6.parent)
+WHERE c1.story_id = 2;
+
+-- search story by owner (bad way)
+-- this relates to 3a in ./explain.txt
+SELECT s.name AS 'story name', CONCAT(u.fname,' ',u.lname) AS 'name'
+FROM stories AS s JOIN users AS u ON (u.id = s.owner)
+WHERE CONCAT(u.fname,' ',u.lname) = 'Tyrion Lannister';
+
+-- search story by owner (better way)
+-- this relates to 3b in ./explain.txt
+SELECT s.name AS 'story name', CONCAT(u.fname,' ',u.lname) AS 'name'
+FROM stories AS s JOIN users AS u ON (u.id = s.owner)
+WHERE u.fname like 'Tyrion' AND u.lname like 'Lannister';
