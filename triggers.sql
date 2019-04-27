@@ -9,9 +9,9 @@ END$
 delimiter ;
 
 -- to test:
-INSERT INTO `tasks` (`name`,`owner`,`story_id`) VALUES
-('train specialists',1,2);
-select * from tasks where name like 'train specialists';
+-- INSERT INTO `tasks` (`name`,`owner`,`story_id`) VALUES
+-- ('train specialists',1,2);
+-- select * from tasks where name like 'train specialists';
 
 
 -- when we create a story with no owner and no status update status to 'unassigned'
@@ -28,10 +28,10 @@ END$
 delimiter ;
 
 -- to test first case:
-INSERT INTO `stories` (`name`) VALUES
-('gain favor of people');
-select * from stories where name like 'gain favor of people'\G
--- to test second case:
-INSERT INTO `stories` (`name`,`owner`) VALUES
-('secure trading partners',3);
-select * from stories where name like 'secure trading partners'\G
+-- INSERT INTO `stories` (`name`) VALUES
+-- ('gain favor of people');
+-- select * from stories where name like 'gain favor of people'\G
+-- -- to test second case:
+-- INSERT INTO `stories` (`name`,`owner`) VALUES
+-- ('secure trading partners',3);
+-- select * from stories where name like 'secure trading partners'\G
