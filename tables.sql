@@ -1,5 +1,3 @@
-set foreign_key_checks=0;
-
 -- ---
 -- Table 'users'
 --
@@ -147,5 +145,3 @@ ALTER TABLE `tasks` ADD FOREIGN KEY (story_id) REFERENCES `stories` (`id`);
 ALTER TABLE `comments` ADD FOREIGN KEY (owner) REFERENCES `users` (`id`);
 ALTER TABLE `comments` ADD FOREIGN KEY (parent) REFERENCES `comments` (`id`);
 ALTER TABLE `comments` ADD FOREIGN KEY (story_id) REFERENCES `stories` (`id`);
-
-set foreign_key_checks=1;
