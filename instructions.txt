@@ -50,8 +50,7 @@ II. Meeting the criteria
   ** A couple updates to push some stories to the next sprint
 
   d. deletes
-  * please excuse that I only included a single delete in the queries.sql file for demonstration
-  * I don't really like deleting data and tearing out records is difficult due to FKs
+  * delete queries will be includes in queries.sql
 
   e. Aggregate Queries (usering group by, sum, exists etc)
   * I have a procedure using COUNT

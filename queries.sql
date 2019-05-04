@@ -61,6 +61,9 @@ SELECT * FROM stories WHERE sprint_id = lastSprint();
 SELECT c.id,c.content,c.owner,s.name
 FROM comments c JOIN stories s ON (c.story_id=s.id);
 
+-- delete a comment
+DELETE FROM comments WHERE id = 9;
+
 -- group a story's comments
 -- does require sql_mode=only_full_group_by
 SELECT c.id,c.content,c.owner,s.name
