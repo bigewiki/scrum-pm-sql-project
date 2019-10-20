@@ -137,3 +137,29 @@ BEGIN
   END IF;
 END EOF
 delimiter ;
+
+
+-- create the current sprint
+DROP PROCEDURE IF EXISTS createCurrentSprint;
+-- CALL createCurrentSprint('2019-10-10');
+delimiter EOF
+CREATE PROCEDURE createCurrentSprint(startDate DATE)
+BEGIN
+  DECLARE endDate Date;
+  DECLARE sprintNum INT;
+  DECLARE prevSprintNum INT;
+  IF currentSprint() IS NOT NULL THEN
+    signal SQLSTATE '45000' set MESSAGE_TEXT = "The current sprint already exists";
+  ELSE
+    select MAX(number) INTO prevSprintNum from sprints WHERE quarter = whatQuarter(CURDATE());
+    SELECT DATE_ADD(startDate, INTERVAL 13 DAY) INTO endDate;
+    IF prevSprintNum IS NULL OR prevSprintNum = '' THEN
+        SET sprintNum = 1;
+    ELSE
+        SET sprintNum = prevSprintNum + 1;
+    END IF;
+    INSERT INTO `sprints` (`quarter`,`number`,`start_date`,`end_date`)
+    VALUES (whatQuarter(CURDATE()) ,sprintNum,startDate,endDate);
+  END IF;
+END EOF
+delimiter ;
