@@ -163,3 +163,18 @@ BEGIN
   END IF;
 END EOF
 delimiter ;
+
+            
+            
+-- display a sprint and its stories, param is the sprint id            
+DROP PROCEDURE IF EXISTS displaySprint;
+-- CALL displaySprint(currentSprint());
+delimiter EOF
+CREATE PROCEDURE displaySprint(sprintNum INT)
+BEGIN
+  SELECT st.id AS 'story_id',sp.quarter,sp.number AS 'sprint_number',sp.start_date AS 'sprint_start',sp.end_date AS 'sprint_end',st.name AS "story_name",CONCAT(u.fname,' ',u.lname) AS 'story_owner'
+  FROM sprints sp JOIN stories st ON (st.sprint_id=sp.id)
+  JOIN users u ON (st.owner=u.id)
+  WHERE sp.id = sprintNum;
+END EOF
+delimiter ;
