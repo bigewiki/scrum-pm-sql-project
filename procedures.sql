@@ -178,3 +178,18 @@ BEGIN
   WHERE sp.id = sprintNum;
 END EOF
 delimiter ;
+
+            
+-- display a story's details, param is the story id
+DROP PROCEDURE IF EXISTS displayStory;
+-- CALL displayStory(3);
+delimiter EOF
+CREATE PROCEDURE displayStory(storyNum INT)
+BEGIN
+  SELECT st.id AS 'story_id',st.name AS "story_name",CONCAT(u.fname,' ',u.lname) AS 'story_owner',sp.id AS 'sprint_id',sp.start_date AS 'sprint_start',sp.end_date AS 'sprint_end'
+  FROM stories st LEFT JOIN sprints sp ON (sp.id=st.sprint_id)
+  LEFT JOIN users u ON (st.owner=u.id)
+  WHERE st.id = storyNum
+  ;
+END EOF
+delimiter ;
