@@ -5,7 +5,6 @@ DROP procedure IF EXISTS storyToCurrentSprint;
 DROP procedure IF EXISTS storyToNextSprint;
 DROP procedure IF EXISTS moveOverdueStories;
 DROP procedure IF EXISTS upgradeOverdueStories;
-DROP procedure IF EXISTS displayStoryComments;
 DROP procedure IF EXISTS createFutureSprint;
 
 -- display all stories
@@ -78,11 +77,14 @@ BEGIN
 END EOF
 delimiter ;
 
+
+DROP procedure IF EXISTS displayStoryComments;
 -- display a passed story's comments in the appropriate hierarchy
+-- CALL displayStoryComments(3);
 delimiter EOF
 CREATE PROCEDURE displayStoryComments(storyId INT)
 BEGIN
-  SELECT c.content,CONCAT(u.fname,' ',u.lname) AS 'user'
+  SELECT c.id as 'comment_id', c.parent as 'parent_id', c.content ,CONCAT(u.fname,' ',u.lname) AS 'user'
   FROM comments c JOIN stories s ON (c.story_id=s.id)
   JOIN users u ON (c.owner=u.id)
   WHERE s.id = storyId
