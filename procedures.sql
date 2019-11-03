@@ -196,3 +196,14 @@ BEGIN
   ;
 END EOF
 delimiter ;
+
+-- insert a new story
+DROP PROCEDURE IF EXISTS createStory;
+-- call createStory('finish api','ive got a lot of work to do',null,null,null,null);
+delimiter EOF
+CREATE PROCEDURE createStory(name CHAR(40), description TEXT,priority CHAR(10),dependency int(3),time_size int(4),epic_id int(3))
+BEGIN
+    INSERT INTO stories (`name`,`description`,`priority`,`dependency`,`time_size`,`epic_id`)
+    VALUES (name,description,priority,dependency,time_size,epic_id);
+END EOF
+delimiter ;
