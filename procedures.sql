@@ -205,5 +205,6 @@ CREATE PROCEDURE createStory(name CHAR(40), description TEXT,priority CHAR(10),d
 BEGIN
     INSERT INTO stories (`name`,`description`,`priority`,`dependency`,`time_size`,`epic_id`)
     VALUES (name,description,priority,dependency,time_size,epic_id);
+    SELECT * FROM stories WHERE id = LAST_INSERT_ID();
 END EOF
 delimiter ;
