@@ -208,3 +208,15 @@ BEGIN
     SELECT * FROM stories WHERE id = LAST_INSERT_ID();
 END EOF
 delimiter ;
+
+
+-- delete a story
+DROP PROCEDURE IF EXISTS deleteStory;
+-- call deleteStory(40);
+delimiter EOF
+CREATE PROCEDURE deleteStory(targetId INT)
+BEGIN
+    DELETE FROM stories WHERE id = targetId
+    LIMIT 1;
+END EOF
+delimiter ;
