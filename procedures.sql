@@ -220,3 +220,17 @@ BEGIN
     LIMIT 1;
 END EOF
 delimiter ;
+
+                                                                                                                              
+                                                                                                                              
+-- check if user exists, return the id
+DROP PROCEDURE IF EXISTS userExists;
+-- call userExists('edward@muniz.dev');
+-- call userExists('grey.worm@targaryen.net');
+delimiter EOF
+CREATE PROCEDURE userExists(inputEmail VARCHAR(99))
+BEGIN
+    SELECT id FROM users WHERE email = inputEmail COLLATE utf8mb4_unicode_ci
+    LIMIT 1;
+END EOF
+delimiter ;                                                                                                                              
