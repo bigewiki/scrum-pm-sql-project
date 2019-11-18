@@ -240,11 +240,11 @@ delimiter ;
                                                
 -- get the password hash for the user
 DROP PROCEDURE IF EXISTS getPasswordHash;
--- call getPasswordHash(1);
+-- call getPasswordHash('grey.worm@targaryen.net');
 delimiter EOF
-CREATE PROCEDURE getPasswordHash(userId INT)
+CREATE PROCEDURE getPasswordHash(inputEmail VARCHAR(99))
 BEGIN
-    SELECT password_hash FROM users WHERE id = userId
+    SELECT password_hash FROM users WHERE email = inputEmail COLLATE utf8mb4_unicode_ci
     LIMIT 1;
 END EOF
 delimiter ;
