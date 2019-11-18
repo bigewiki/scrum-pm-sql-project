@@ -234,3 +234,17 @@ BEGIN
     LIMIT 1;
 END EOF
 delimiter ;                                                                                                                              
+
+                                               
+                                               
+                                               
+-- get the password hash for the user
+DROP PROCEDURE IF EXISTS getPasswordHash;
+-- call getPasswordHash(1);
+delimiter EOF
+CREATE PROCEDURE getPasswordHash(userId INT)
+BEGIN
+    SELECT password_hash FROM users WHERE id = userId
+    LIMIT 1;
+END EOF
+delimiter ;
