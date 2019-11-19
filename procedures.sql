@@ -260,5 +260,6 @@ BEGIN
     DELETE FROM api_keys WHERE id = userId;
     INSERT INTO api_keys (`user`,`creation`,`expiration`,`value_hash`)
     VALUES (userId,NOW(),(NOW() + INTERVAL 20 MINUTE),newKey);
+    SELECT creation,expiration FROM api_keys WHERE id = LAST_INSERT_ID();
 END EOF
 delimiter ;
