@@ -244,7 +244,7 @@ DROP PROCEDURE IF EXISTS getPasswordHash;
 delimiter EOF
 CREATE PROCEDURE getPasswordHash(inputEmail VARCHAR(99))
 BEGIN
-    SELECT password_hash FROM users WHERE email = inputEmail COLLATE utf8mb4_unicode_ci
+    SELECT id,password_hash FROM users WHERE email = inputEmail COLLATE utf8mb4_unicode_ci
     LIMIT 1;
 END EOF
 delimiter ;
