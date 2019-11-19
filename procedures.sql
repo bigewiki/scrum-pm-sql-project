@@ -259,6 +259,6 @@ CREATE PROCEDURE createKey(userId INT, newKey VARCHAR(255))
 BEGIN
     DELETE FROM api_keys WHERE id = userId;
     INSERT INTO api_keys (`user`,`creation`,`expiration`,`value_hash`)
-    VALUES (userId,NOW(),(NOW() + INTERVAL 5 MINUTE),newKey);
+    VALUES (userId,NOW(),(NOW() + INTERVAL 20 MINUTE),newKey);
 END EOF
 delimiter ;
