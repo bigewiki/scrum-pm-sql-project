@@ -251,13 +251,13 @@ delimiter ;
 
                                                     
                                                     
--- create an API key for the user
+-- create an API key for the user, delete the old one
 DROP PROCEDURE IF EXISTS createKey;
 -- call createKey(1);
 delimiter EOF
 CREATE PROCEDURE createKey(userId INT, newKey VARCHAR(255))
 BEGIN
-    DELETE FROM api_keys WHERE id = userId;
+    DELETE FROM api_keys WHERE user = userId;
     INSERT INTO api_keys (`user`,`creation`,`expiration`,`value_hash`)
     VALUES (userId,NOW(),(NOW() + INTERVAL 20 MINUTE),newKey);
     SELECT creation,expiration FROM api_keys WHERE id = LAST_INSERT_ID();
