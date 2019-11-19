@@ -130,6 +130,22 @@ CREATE TABLE `sprints` (
   PRIMARY KEY (`id`)
 ) engine=InnoDB Default charset utf8mb4 collate=utf8mb4_unicode_ci;
 
+
+-- ---
+-- Table 'api_keys'
+--
+-- ---
+
+CREATE TABLE `api_keys` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `user` INTEGER NOT NULL,
+  `creation` DATETIME NOT NULL,
+  `expiration` DATETIME NOT NULL,
+  `value_hash` VARCHAR(255),
+  PRIMARY KEY (`id`)
+) engine=InnoDB Default charset utf8mb4 collate=utf8mb4_unicode_ci;
+
+
 -- ---
 -- Foreign Keys
 -- ---
@@ -145,3 +161,5 @@ ALTER TABLE `tasks` ADD FOREIGN KEY (story_id) REFERENCES `stories` (`id`);
 ALTER TABLE `comments` ADD FOREIGN KEY (owner) REFERENCES `users` (`id`);
 ALTER TABLE `comments` ADD FOREIGN KEY (parent) REFERENCES `comments` (`id`);
 ALTER TABLE `comments` ADD FOREIGN KEY (story_id) REFERENCES `stories` (`id`);
+ALTER TABLE `api_keys` ADD FOREIGN KEY (user) REFERENCES `users` (`id`);
+
