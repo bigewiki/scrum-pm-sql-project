@@ -263,3 +263,24 @@ BEGIN
     SELECT creation,expiration FROM api_keys WHERE id = LAST_INSERT_ID();
 END EOF
 delimiter ;
+
+                                                      
+                                                      
+-- get the API key matching the signature/prefix and check that it's still valid
+DROP PROCEDURE IF EXISTS checkKey;
+-- call checkKey('vbtfm1j8t2');
+delimiter EOF
+CREATE PROCEDURE checkKey(prefix VARCHAR(255))
+BEGIN
+    DECLARE keyCreated DATETIME;
+    DECLARE keyExpires DATETIME;
+    DECLARE keyValue VARCHAR(255);
+    SELECT creation, expiration, value_hash INTO keyCreated, keyExpires, keyValue FROM api_keys
+    WHERE value_hash like CONCAT(prefix,'%') COLLATE utf8mb4_unicode_ci;
+    IF keyCreated < NOW() AND keyExpires > NOW() THEN
+        SELECT keyValue;
+    ELSE
+        signal SQLSTATE '45000' set MESSAGE_TEXT = "Sorry, the key is invalid";
+    END IF;
+END EOF
+delimiter ;
