@@ -284,3 +284,69 @@ BEGIN
     END IF;
 END EOF
 delimiter ;
+
+                                         
+                                         
+                                         
+-- patch a story
+DROP PROCEDURE IF EXISTS patchStory;
+-- call patchStory(1,'new name','new description',1,18,'high',null,'1',null,'in progress');
+-- call patchStory(29,'new name','new description',1,18,'high',28,8,1,'in progress');
+-- call patchStory(29,'newer name',null,null,null,null,null,null,null,null);
+delimiter EOF
+CREATE PROCEDURE patchStory(
+    updateId INT,
+    newName VARCHAR(30),
+    newDescription MEDIUMTEXT,
+    newOwner INT,
+    newSprintId INT,
+    newPriority VARCHAR(10),
+    newDependency INT,
+    newTimeSize INT,
+    newEpicId INT,
+    newStatus VARCHAR(30)
+)
+BEGIN
+    -- confirm the story exists
+    IF (SELECT count(*) FROM stories WHERE id = updateId) > 0 THEN
+        -- update name
+        IF newName IS NOT NULL THEN
+            UPDATE stories SET name = newName WHERE id = updateId;
+        END IF;
+        -- update description
+        IF newDescription IS NOT NULL THEN
+            UPDATE stories SET description = newDescription WHERE id = updateId;
+        END IF;
+        -- update owner
+        IF newOwner IS NOT NULL THEN
+            UPDATE stories SET owner = newOwner WHERE id = updateId;
+        END IF;
+        -- update sprint id
+        IF newSprintId IS NOT NULL THEN
+            UPDATE stories SET sprint_id = newSprintId WHERE id = updateId;
+        END IF;
+        -- update priority
+        IF newPriority IS NOT NULL THEN
+            UPDATE stories SET priority = newPriority WHERE id = updateId;
+        END IF;
+        -- update dependency
+        IF newDependency IS NOT NULL THEN
+            UPDATE stories SET dependency = newDependency WHERE id = updateId;
+        END IF;
+        -- update time size
+        IF newTimeSize IS NOT NULL THEN
+            UPDATE stories SET time_size = newTimeSize WHERE id = updateId;
+        END IF;
+        -- update epic id
+        IF newEpicId IS NOT NULL THEN
+            UPDATE stories SET epic_id = newEpicId WHERE id = updateId;
+        END IF;
+        -- update status
+        IF newStatus IS NOT NULL THEN
+            UPDATE stories SET status = newStatus WHERE id = updateId;
+        END IF;
+    ELSE
+        signal SQLSTATE '45000' set MESSAGE_TEXT = "Story not found";
+    END IF;
+END EOF
+delimiter ;
