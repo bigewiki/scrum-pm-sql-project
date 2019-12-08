@@ -237,7 +237,7 @@ DROP PROCEDURE IF EXISTS userExists;
 delimiter EOF
 CREATE PROCEDURE userExists(inputEmail VARCHAR(99))
 BEGIN
-    SELECT id FROM users WHERE email = inputEmail COLLATE utf8mb4_unicode_ci
+    SELECT id FROM users WHERE email = inputEmail
     LIMIT 1;
 END EOF
 delimiter ;                                                                                                                              
@@ -251,7 +251,7 @@ DROP PROCEDURE IF EXISTS getPasswordHash;
 delimiter EOF
 CREATE PROCEDURE getPasswordHash(inputEmail VARCHAR(99))
 BEGIN
-    SELECT id,password_hash FROM users WHERE email = inputEmail COLLATE utf8mb4_unicode_ci
+    SELECT id,password_hash FROM users WHERE email = inputEmail
     LIMIT 1;
 END EOF
 delimiter ;
