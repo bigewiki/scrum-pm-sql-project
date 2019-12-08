@@ -283,7 +283,7 @@ BEGIN
     DECLARE keyExpires DATETIME;
     DECLARE keyValue VARCHAR(255);
     SELECT creation, expiration, value_hash INTO keyCreated, keyExpires, keyValue FROM api_keys
-    WHERE value_hash like CONCAT(prefix,'%') COLLATE utf8mb4_unicode_ci;
+    WHERE value_hash like CONCAT(prefix,'%');
     IF keyCreated < NOW() AND keyExpires > NOW() THEN
         SELECT keyValue;
     ELSE
